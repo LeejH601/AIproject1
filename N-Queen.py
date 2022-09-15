@@ -31,10 +31,12 @@ class State:
             for j in range(len(self.board)):
                 if j in impossible_low:
                     continue
+                loopflag = True
                 for pair in self.pairs:
                     if abs(i - pair[0]) == abs(j - pair[1]):
-                        continue
-                result.append(self.get_new_Board(i,j,moves))
+                        loopflag = False
+                if loopflag:
+                    result.append(self.get_new_Board(i,j,moves))
         return result
 
     def f(self):
@@ -46,15 +48,15 @@ class State:
         #         sub = [self.pairs[i][0] - self.pairs[i+j][0],self.pairs[i][1] - self.pairs[i+j][1]]
         #         if sub[0] != sub[1]:
         #             return float('inf')
-        for pair1 in self.pairs:
-            for pair2 in self.pairs:
-                if pair1 != pair2:
-                    if abs(pair1[0] - pair2[0]) == abs(pair1[1] - pair2[1]):
-                        return float('inf')
+        # for pair1 in self.pairs:
+        #     for pair2 in self.pairs:
+        #         if pair1 != pair2:
+        #             if abs(pair1[0] - pair2[0]) == abs(pair1[1] - pair2[1]):
+        #                 return float('inf')
         return self.count
 
     def g(self):
-        return -self.moves
+        return self.moves
 
     def __lt__(self, other):
         return self.f() < other.f()
@@ -74,7 +76,7 @@ class State:
 
 
 
-count = input()
+count = int( input())
 moves = 0
 
 open_queue = queue.PriorityQueue()
@@ -95,3 +97,12 @@ while open_queue:
                 continue
         open_queue.put(state)
     closed_queue.append(current)
+    board = copy.deepcopy(current.board)
+    for _ in range(3):
+        new_board = [[0 for _ in range(count)] for _ in range(count)]
+        pairs = []
+        for pair in current.pairs:
+            new_board[(count-1) - pair[1]][pair[0]] = 1
+            pairs.append([(count-1) - pair[1], pair[0]])
+        closed_queue.append(State(new_board,pairs,current.count,moves))
+0
