@@ -86,8 +86,9 @@ closed_queue = []
 
 while open_queue:
     current = open_queue.get()
-    print(current)
+    # print(current)
     if (current.count == 0):
+        print(current)
         print("탐색성공")
         break
     moves = current.moves + 1
@@ -105,4 +106,3 @@ while open_queue:
             new_board[(count-1) - pair[1]][pair[0]] = 1
             pairs.append([(count-1) - pair[1], pair[0]])
         closed_queue.append(State(new_board,pairs,current.count,moves))
-0
